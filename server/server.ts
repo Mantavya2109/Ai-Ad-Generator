@@ -24,6 +24,6 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Server is Live!");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+app.listen(Number(PORT), "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });
