@@ -12,6 +12,7 @@ export const protect = async (
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
+    next();
   } catch (error: any) {
     Sentry.captureException(error);
     res.status(401).json({ message: error.code || error.message });

@@ -13,31 +13,43 @@ const clerkWebhooks = async (req: Request, res: Response) => {
     //switch cases for different events
     switch (type) {
       case "user.created": {
-        await prisma.user.create({
-          data: {
+        await prisma.user.upsert({
+          where: { id: data.id },
+          update: {},
+          create: {
             id: data.id,
-            email: data?.email_addresses[0]?.email_address,
-            name: data?.first_name + " " + data?.last_name,
-            image: data?.image_url,
+            email: data?.email_addresses?.[0]?.email_address ?? "",
+            name: `${data?.first_name ?? ""} ${data?.last_name ?? ""}`,
+            image: data?.image_url ?? "",
+            credits: 20,
           },
         });
         break;
       }
+
       case "user.updated": {
-        await prisma.user.update({
-          where: {
-            id: data.id,
+        await prisma.user.upsert({
+          where: { id: data.id },
+          update: {
+            email: data?.email_addresses?.[0]?.email_address ?? "",
+            name: `${data?.first_name ?? ""} ${data?.last_name ?? ""}`,
+            image: data?.image_url ?? "",
           },
-          data: {
-            email: data?.email_email_addresses[0]?.email_address,
-            name: data?.first_name + " " + data?.last_name,
-            image: data?.image_url,
+          create: {
+            id: data.id,
+            email: data?.email_addresses?.[0]?.email_address ?? "",
+            name: `${data?.first_name ?? ""} ${data?.last_name ?? ""}`,
+            image: data?.image_url ?? "",
+            credits: 20,
           },
         });
         break;
       }
+
       case "user.deleted": {
-        await prisma.user.delete({ where: { id: data.id } });
+        await prisma.user.deleteMany({
+          where: { id: data.id },
+        });
         break;
       }
       case "paymentAttempt.updated": {

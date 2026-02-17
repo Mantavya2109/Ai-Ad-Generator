@@ -7,6 +7,7 @@ import { prisma } from "../configs/prisma.js";
 export const getUserCredits = async (req: Request, res: Response) => {
   try {
     const { userId } = req.auth();
+    console.log("AUTH USER:", userId);
     if (!userId) {
       return res.status(401).json({ message: "UnAuthorized" });
     }
@@ -14,6 +15,8 @@ export const getUserCredits = async (req: Request, res: Response) => {
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
+
+    console.log("DB USER:", user);
 
     res.json({ credits: user?.credits });
   } catch (error: any) {
