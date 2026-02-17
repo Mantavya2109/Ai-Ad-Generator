@@ -48,8 +48,10 @@ export const getProjectById = async (req: Request, res: Response) => {
     if (!userId) {
       return res.status(401).json({ message: "UnAuthorized" });
     }
-    const { projectId } = req.params;
-    const project = await prisma.project.findUnique({
+    const projectId = Array.isArray(req.params.id)
+      ? req.params.id[0]
+      : req.params.id;
+    const project = await prisma.project.findFirst({
       where: { id: projectId, userId },
     });
 
@@ -67,12 +69,16 @@ export const getProjectById = async (req: Request, res: Response) => {
 // publish/unpublish project
 export const toggleProjectPublic = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.auth();
-    if (!userId) {
+    const auth = req.auth();
+
+    if (!auth.userId) {
       return res.status(401).json({ message: "UnAuthorized" });
     }
-    const { projectId } = req.params;
-    const project = await prisma.project.findUnique({
+
+    const userId = auth.userId;
+    const projectId = req.params.projectId as string;
+
+    const project = await prisma.project.findFirst({
       where: { id: projectId, userId },
     });
 
@@ -80,8 +86,8 @@ export const toggleProjectPublic = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    if (!project?.generatedImage && !project?.generatedVideo) {
-      return res.status(404).json({ message: "image or video not generated" });
+    if (!project.generatedImage && !project.generatedVideo) {
+      return res.status(400).json({ message: "image or video not generated" });
     }
 
     await prisma.project.update({
