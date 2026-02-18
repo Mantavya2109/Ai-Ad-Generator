@@ -1,0 +1,35 @@
+name: Generate Project PDF
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install code2pdf
+        run: npm install -g code2pdf
+
+      - name: Generate PDF
+        run: |
+          code2pdf . \
+          -o AiAdGenerator-Code.pdf \
+          --theme dark \
+          --line-numbers \
+          --exclude node_modules,.git,.next,dist,build,out,coverage,package-lock.json,yarn.lock,.env
+
+      - name: Upload PDF Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AiAdGenerator-Code
+          path: AiAdGenerator-Code.pdf
