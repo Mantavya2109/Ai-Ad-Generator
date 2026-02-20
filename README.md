@@ -1,4 +1,4 @@
-For deployment:
+For deployment-> Do this before. 
 
 1. Just do/create a project on google cloud - cloud.google.com.
 2. Then create API key in Google ai studio importing the project you build in step 1.
