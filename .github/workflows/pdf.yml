@@ -1,0 +1,26 @@
+name: Generate Repo PDF
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Install code2pdf
+        run: npm install -g code2pdf
+
+      - name: Generate PDF
+        run: |
+          mkdir output
+          code2pdf . output/repository.pdf
+
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo-pdf
+          path: output/repository.pdf
