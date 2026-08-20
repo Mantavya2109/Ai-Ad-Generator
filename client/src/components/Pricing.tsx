@@ -1,6 +1,6 @@
 import Title from "./Title";
 
-import { useRef } from "react";
+
 import { PricingTable } from "@clerk/clerk-react";
 
 export default function Pricing() {
