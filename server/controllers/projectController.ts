@@ -85,7 +85,7 @@ export const createProject = async (req: Request, res: Response) => {
 
     tempProjectId = project.id;
 
-    const model = "gemini-3-pro-image-preview";
+    const model = "gemini-3-pro-image";
 
     const generationConfig: GenerateContentConfig = {
       maxOutputTokens: 32768,
@@ -141,7 +141,7 @@ export const createProject = async (req: Request, res: Response) => {
 
     for (const part of parts) {
       if (part.inlineData) {
-        finalBuffer = Buffer.from(parts.inlineData.data, "base64");
+        finalBuffer = Buffer.from(part.inlineData.data, "base64");
       }
     }
 
